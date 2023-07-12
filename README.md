@@ -77,33 +77,20 @@ Lightning Web Component 를 위한 상태관리 라이브러리.
 	});
 
 	const extraReducers = {
-    		[getTodos.pending]: (state, action) => {
-  		   state.todoLoading = true;
-    		},
-    		[getTodos.fulfilled]: (state, action) => {
-      		   console.log(action);
-		   state.todoLoading = false;
-        	   state.todos = action.payload;
-    		},
-    		[getTodos.rejected]: (state, action) => {
-        	   state.todoLoading = false;
-        	   state.error = action.error.message;
-        	   UIUtil.comShowToast(`[${action.payload.status} ${action.payload.statusText}] ${action.payload.error}`);
-    		},
-
-    		[addTodo.pending]: (state, action) => {
-        	   state.todoLoading = true;
-    		},
-   		[addTodo.fulfilled]: (state, action) => {
-        	   state.todoLoading = false;
-        	   state.todos.push(action.payload);
-    		},
-    		[addTodo.rejected]: (state, action) => {
-       		   state.todoLoading = false;
-       		   UIUtil.comShowToast(`[${action.payload.status} ${action.payload.statusText}] ${action.payload.error}`);
-    		},
-   		 ....
-   
+    	[getTodos.pending]: (state, action) => {
+        	state.todoLoading = true;
+    	},
+    	[getTodos.fulfilled]: (state, action) => {
+        	console.log(action);
+        	state.todoLoading = false;
+        	state.todos = action.payload;
+    	},
+    	[getTodos.rejected]: (state, action) => {
+        	state.todoLoading = false;
+        	state.error = action.error.message;
+        	UIUtil.comShowToast(`[${action.payload.status} ${action.payload.statusText}] ${action.payload.error}`);
+    	},
+  		....
 	}
 
 	export {getTodos, addTodo, ...., extraReducers}
