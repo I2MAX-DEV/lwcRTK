@@ -68,6 +68,16 @@ import {UIUtil} from "c/comApUtil";
 
 const {createAsyncThunk} = RTK;
 
+// https://redux-toolkit.js.org/api/createAsyncThunk
+// createAsyncThunk를 통해 비동기 처리 및 비동기 결과를 return 하여 pending/fulfilled/rejected에 대한 결과를 처리한다.
+// 첫번째 인자는 해당 Action에 대한 로그 네이밍
+// 두번째 인자는 고차함수 async(param, thunkAPI)
+//   param은 고차함수에 넘겨줄 파라미터 ex> Apex parameter
+//   thunkAPI
+//    - thunkAPI.dispatch / 내부에서 다른 Action을 호출한다.
+//    - thunkAPI.rejectWithValue / 실패 처리와 함께 value를 리턴.
+//    - thunkAPI.getState() / store내의 state를 불러온다.
+
 const getTodos = createAsyncThunk('test/getPosts', async (_, thunkAPI) => {
 	try {
 		return await getTodosApex();
@@ -84,6 +94,7 @@ const addTodo = createAsyncThunk('test/addTodo', async (content, thunkAPI) => {
 	}
 });
 
+// Action에 대한 대응. action의 return 에 따른 처리 ( Apex실패시 에러처리, Apex 호출시작시 Loading처리 등 )
 const extraReducers = {
 	[getTodos.pending]: (state, action) => {
 		state.todoLoading = true;
@@ -110,6 +121,7 @@ import {getTodos, addTodo, deleteTodo, changeTodoStatus, extraReducers} from "..
 
 const {createSlice} = RTK;
 
+// 관리될 state 
 const initialState = {
 	todos: [],
 	todoLoading: false,
@@ -118,10 +130,12 @@ const initialState = {
 	error: null
 };
 
+
 const todoSlice = createSlice({
 	name: 'todo',
 	initialState,
 	reducers: {
+		// state에 대한 변경 처리 Action 선언  
 		setTodoFilter(state, action) {
 			state.todoFilter = action.payload;
 		},
@@ -133,7 +147,8 @@ const todoSlice = createSlice({
 });
 
 const { setTodoFilter } = counterSlice.actions;
-   
+
+// LWC에서 사용할 수 있도록 export 
 export const TEST_ACTIONS = {
 	setTodoFilter,
 	getTodos,
