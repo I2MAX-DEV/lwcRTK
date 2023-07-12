@@ -5,7 +5,7 @@ Lightning Web Component 를 위한 상태관리 라이브러리.(https://redux-t
 ## 적용배경
 ### 원인
  - 복잡한 화면을 LWC 구현시 유지보수를 위해 컴포넌트를 구분하는 상황에서 LWC에서 Prop Drilling 이 너무 심해지고 수많은 이벤트가 커스텀으로 생성되고 코드가 복잡해지는 경향이 있다.
- - 컴포넌트 별 데이터 기반으로 화면을 그려야하는데, 컴포넌트 별로 Data가 일관적인지 않으니, 직접적으로 HTML Element 를 조작함으로 인한 오류가 너무 많았음.
+ - 컴포넌트마다 Apex를 호출하는 코드가 있어서 Data가 일관적이지 않으니, 직접적으로 HTML Element 를 조작함으로 인한 오류가 너무 많았음.
  - LWC에서 Apex 메소드 호출 하는 코드를 작성할 때, UI Layer(Presentation) 와 Data Layer(Service & Container)가 구분없이 관리되는 것을 보게됨.
  - 그로 인해 UI와 Data 가 별도로 구분되는 상태관리 라이브러리가 필요헀음.
 
