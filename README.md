@@ -44,7 +44,7 @@ Lightning Web Component 를 위한 상태관리 라이브러리.(https://redux-t
 - redux-toolkit을 이용한 `UI Layer(LWC)` 와 `Data Layer(Redux Store)` 분리
 - state 입출력을 위한 컴포넌트 공통화
 - 각 컴포넌트에서 mapStateProps 작성 및 사용을 통한 **LWC Prop Drilling**(부모 -> 자식 -> 그외 Depth Props(@api Property) 전달을 위한 행위 ex) customEvent 등록 & @api 등) 해소.
-- LWC - APEX 통신을 Action화 함으로써 각 컴포넌트에서는 구현 해둔 Action을 호출. 그로 인한 불필요한 보일러 플레이트 코드 (ex ) apiService.gfnComApex ) 해소
+- LWC - APEX 통신을 Action화 함으로써 각 컴포넌트에서는 구현 해둔 Action을 호출. 그로 인한 불필요한 Apex 호출 코드 반복작성 (ex ) apiService.gfnComApex ) 해소
 
 ## 미구현
 - 브라우저 extension 중 redux dev tools는 사용 불가로 확인.
