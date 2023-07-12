@@ -25,6 +25,7 @@ Lightning Web Component 를 위한 상태관리 라이브러리.
 - state 입출력을 위한 컴포넌트 공통화
 - 각 컴포넌트에서 mapStateProps 작성 및 사용을 통한 LWC Prop Drilling(부모 -> 자식 -> 그외 Depth Props(@api Property) 전달을 위한 행위 ex) customEvent 등록 & @api 등) 해소.
   ```javascript
+      // zzRtkTestTodo.js (LWC Component)
       import {api, LightningElement} from 'lwc';
       import {Redux} from 'c/lwcRtk';
       import {TEST_ACTIONS} from 'c/zzRtkTestAppStore';
@@ -48,5 +49,65 @@ Lightning Web Component 를 위한 상태관리 라이브러리.
 		    };
 	    }
       }
+  ```
+  ```javascript
+
+	import {RTK} from 'c/lwcReduxLibs';
+	import getTodosApex from '@salesforce/apex/ZZ_TodoController.getDefaultTodos';
+	import addNewTodoApex from '@salesforce/apex/ZZ_TodoController.addDefaultNewTodo';
+	import changeStatus from '@salesforce/apex/ZZ_TodoController.changeDefaultTodoStatus';
+	import deleteTodoApex from '@salesforce/apex/ZZ_TodoController.deleteTodo';
+	import {UIUtil} from "c/comApUtil";
+
+	const {createAsyncThunk} = RTK;
+
+	const getTodos = createAsyncThunk('test/getPosts', async (_, thunkAPI) => {
+    		try {
+    	    		return await getTodosApex();
+   	 	} catch (err) {
+    	    		return thunkAPI.rejectWithValue({error: err.body.message, status: err.status, statusText: err.statusText});
+   	 	}
+	});
+
+	const addTodo = createAsyncThunk('test/addTodo', async (content, thunkAPI) => {
+    		try {
+        		return await addNewTodoApex({content});
+   	 	} catch (err) {
+       		 	return thunkAPI.rejectWithValue({error: err.body.message, status: err.status, statusText: err.statusText});
+    		}
+	});
+
+
+	const extraReducers = {
+    		[getTodos.pending]: (state, action) => {
+        		state.todoLoading = true;
+    		},
+    		[getTodos.fulfilled]: (state, action) => {
+        		console.log(action);
+        		state.todoLoading = false;
+        		state.todos = action.payload;
+    		},
+    		[getTodos.rejected]: (state, action) => {
+        		state.todoLoading = false;
+        		state.error = action.error.message;
+        		UIUtil.comShowToast(`[${action.payload.status} ${action.payload.statusText}] ${action.payload.error}`);
+    		},
+
+    		[addTodo.pending]: (state, action) => {
+        		state.todoLoading = true;
+    		},
+   		[addTodo.fulfilled]: (state, action) => {
+        		state.todoLoading = false;
+        		state.todos.push(action.payload);
+    		},
+    		[addTodo.rejected]: (state, action) => {
+       			 state.todoLoading = false;
+       			 UIUtil.comShowToast(`[${action.payload.status} ${action.payload.statusText}] ${action.payload.error}`);
+    		},
+   		 ....
+   
+	}
+
+	export {getTodos, addTodo, ...., extraReducers}
   ```
 - LWC - APEX 통신을 Action화 함으로써 각 컴포넌트에서는 구현 해둔 Action을 호출. 그로 인한 불필요한 보일러 플레이트 코드 (ex ) apiService.gfnComApex ) 해소 
