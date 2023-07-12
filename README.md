@@ -50,7 +50,7 @@ Lightning Web Component 를 위한 상태관리 라이브러리.
       }
   ```
   ```javascript
-
+	// store/action.js
 	import {RTK} from 'c/lwcReduxLibs';
 	import getTodosApex from '@salesforce/apex/ZZ_TodoController.getDefaultTodos';
 	import addNewTodoApex from '@salesforce/apex/ZZ_TodoController.addDefaultNewTodo';
@@ -94,4 +94,45 @@ Lightning Web Component 를 위한 상태관리 라이브러리.
 
 	export {getTodos, addTodo, ...., extraReducers}
   ```
+   ```javascript
+   	// store/reducer.js
+   	import {RTK} from 'c/lwcReduxLibs';
+	import {getTodos, addTodo, deleteTodo, changeTodoStatus, extraReducers} from "../actions/testAction";
+
+	const {createSlice} = RTK;
+
+	const initialState = {
+	   todos: [],
+	   todoLoading: false,
+	   todoFilter: 'All',
+	   status: 'idle',
+	   error: null
+	};
+
+	const counterSlice = createSlice({
+	   name: 'todo',
+	   initialState,
+	   reducers: {
+		setTodoFilter(state, action) {
+			state.todoFilter = action.payload;
+		},
+		reset(state) {
+			Object.assign(state, initialState);
+		}
+	   },
+	   extraReducers
+	});
+   
+	const { setTodoFilter } = counterSlice.actions;
+   
+	export const TEST_ACTIONS = {
+	   setTodoFilter,
+	   getTodos,
+	   addTodo,
+	   deleteTodo,
+	   changeTodoStatus,
+	   reset
+	};
+	export default counterSlice.reducer;
+   ```
 - LWC - APEX 통신을 Action화 함으로써 각 컴포넌트에서는 구현 해둔 Action을 호출. 그로 인한 불필요한 보일러 플레이트 코드 (ex ) apiService.gfnComApex ) 해소 
