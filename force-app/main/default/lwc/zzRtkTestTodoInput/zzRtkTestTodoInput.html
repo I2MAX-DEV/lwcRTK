@@ -1,0 +1,46 @@
+<!--
+ * @filename      : ZzRtkTestTodoInput
+ * @projectname   : SSDS-FDRY
+ * @author        : I2MAX JW.KIM
+ * @date          : 2023-04-13
+ * @group         :
+ * @group-content :
+ * @description   : 
+ * @reference     :
+ * @release       : v1.0.0
+ * @modification Log
+ * ===============================================================
+ * ver     date            author          description
+ * ===============================================================
+ 0.1     2023-04-13      I2MAX JW.KIM          Create
+ -->
+<!-- Zz Rtk Test Todo Input -->
+<template>
+    <lightning-layout multiple-rows="false">
+        <lightning-layout-item flexibility="auto, grow">
+            <lightning-input
+                    label="test-input"
+                    variant="label-hidden"
+                    value={todoInput}
+                    type="text"
+                    placeholder="Type task.."
+                    onchange={inputChange}
+                    onkeyup={handleSearchKeyUp}
+            >
+            </lightning-input>
+        </lightning-layout-item>
+        <lightning-layout-item flexibility="auto, no-grow">
+            <lightning-button variant="brand" label="Submit" title="Submit" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+        </lightning-layout-item>
+        <lightning-layout-item flexibility="auto, no-grow">
+            <lightning-button-icon
+                    aria-label="refersh-button"
+                    icon-name="utility:refresh"
+                    alternative-text="refresh"
+                    class="slds-var-m-left_x-small"
+                    title="Refresh"
+                    onclick={handleRefresh}
+            ></lightning-button-icon>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

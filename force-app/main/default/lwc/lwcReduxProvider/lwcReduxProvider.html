@@ -1,0 +1,22 @@
+<!--
+ * @filename      : LwcReduxProvider
+ * @projectname   : SSDS-공통
+ * @author        : I2MAX
+ * @date          : 2022-07-28
+ * @group         :
+ * @group-content :
+ * @description   : 
+ * @reference     :
+ * @release       : v1.0.0
+ * @modification Log
+ * ===============================================================
+ * ver     date            author          description
+ * ===============================================================
+ 0.1     2022-07-28      I2MAX           Create
+ -->
+<!-- Lwc Redux Provider -->
+<template>
+    <template if:true={loadCompleted}>
+        <slot></slot>
+    </template>
+</template>

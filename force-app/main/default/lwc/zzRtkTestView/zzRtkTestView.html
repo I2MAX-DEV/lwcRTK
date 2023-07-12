@@ -1,0 +1,63 @@
+<!--
+ * @filename      : ZzRtkTestView
+ * @projectname   : SSDS-FDRY
+ * @author        : I2MAX JW.KIM
+ * @date          : 2023-04-12
+ * @group         :
+ * @group-content :
+ * @description   : 
+ * @reference     :
+ * @release       : v1.0.0
+ * @modification Log
+ * ===============================================================
+ * ver     date            author          description
+ * ===============================================================
+ 0.1     2023-04-12      I2MAX JW.KIM          Create
+ -->
+<!-- Zz Rtk Test View -->
+<template>
+	<!--	<lightning-layout multiple-rows="false">-->
+	<!--		<lightning-layout-item size="6" padding="horizontal-small">-->
+	<!--			<span>RTK Test</span>-->
+	<!--			<span>value : {props.value}</span>-->
+	<!--		</lightning-layout-item>-->
+	<!--		<lightning-layout-item size="6" padding="horizontal-small">-->
+	<!--			<lightning-button label="+" onclick={props.increment}></lightning-button>-->
+	<!--			<lightning-button label="-" onclick={props.decrement}></lightning-button>-->
+	<!--		</lightning-layout-item>-->
+	<!--	</lightning-layout>-->
+
+	<div style="background: white">
+	<c-com-ui-spin-slot is-spinner={props.todoLoading}>
+		<lightning-layout multiple-rows="false" horizontal-align="center">
+			<lightning-layout-item size="12" padding="around-small">
+				<c-zz-rtk-test-todo-input></c-zz-rtk-test-todo-input>
+			</lightning-layout-item>
+			<lightning-layout-item size="12" padding="around-small">
+				<lightning-radio-group
+					name="filter"
+					class="radio-combo-inline"
+					label="filter"
+					options={filterOption}
+					value={props.todoFilter}
+					variant="label-hidden"
+					type="button"
+					onchange={handleChangeFilter}
+				></lightning-radio-group>
+			</lightning-layout-item>
+			<lightning-layout-item size="12" padding="around-small">
+				<div class="todo-list">
+					<template lwc:if={hasTodos}>
+						<template for:each={filterTodos} for:item="todo">
+							<c-zz-rtk-test-todo key={todo.Id} record={todo}></c-zz-rtk-test-todo>
+						</template>
+					</template>
+					<template lwc:else>
+						<div class="slds-m-top_medium"><b>No item found</b></div>
+					</template>
+				</div>
+			</lightning-layout-item>
+		</lightning-layout>
+	</c-com-ui-spin-slot>
+	</div>
+</template>

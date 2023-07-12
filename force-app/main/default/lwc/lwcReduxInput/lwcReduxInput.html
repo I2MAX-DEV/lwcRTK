@@ -1,0 +1,143 @@
+<!--
+ * @filename      : FdrRfqReduxInput
+ * @projectname   : SSDS-공통
+ * @author        : I2MAX
+ * @date          : 2022-10-11
+ * @group         :
+ * @group-content :
+ * @description   : 
+ * @reference     :
+ * @release       : v1.0.0
+ * @modification Log
+ * ===============================================================
+ * ver     date            author          description
+ * ===============================================================
+ 0.1     2022-10-11      I2MAX           Create
+ -->
+<!-- Fdr BCR Redux Input -->
+<template>
+	<template if:true={isInput}>
+		<lightning-input
+			class={elClass}
+			label={label}
+			variant={labelVariant}
+			name={propertyName}
+			placeholder={placeHolder}
+			value={value}
+			onchange={handleChange}
+			type={valueType}
+			data-el='input'
+			data-type={eventType}
+			read-only={readOnly}
+			required={isRequired}
+			disabled={disabled}
+			onkeyup={handleEnter}
+			onblur={handleChange}
+			formatter={formatter}
+			step={step}
+			min={min}
+		></lightning-input>
+	</template>
+	<template if:true={isCheckBox}>
+		<lightning-input
+			class={elClass}
+			label={label}
+			variant={labelVariant}
+			name={propertyName}
+			placeholder={placeHolder}
+			value={value}
+			onchange={handleChange}
+			type={valueType}
+			data-el='input-check'
+			data-type={eventType}
+			read-only={readOnly}
+			required={isRequired}
+			disabled={disabled}
+			onkeyup={handleEnter}
+		></lightning-input>
+	</template>
+	<template if:true={isTextArea}>
+		<lightning-textarea
+			class={elClass}
+			label={label}
+			variant={labelVariant}
+			name={propertyName}
+			placeholder={placeHolder}
+			value={value}
+			onchange={handleChange}
+			data-el='textarea'
+			data-type={eventType}
+			required={isRequired}
+			read-only={readOnly}
+			disabled={disabled}
+			onblur={handleChange}
+		></lightning-textarea>
+	</template>
+	<template if:true={isCombobox}>
+		<lightning-combobox
+			class="none-padding"
+			validity={}
+			name={propertyName}
+			label={label}
+			variant={labelVariant}
+			value={value}
+			placeholder={placeHolder}
+			options={options}
+			onchange={handleChange}
+			data-el='combobox'
+			data-type={eventType}
+			read-only={readOnly}
+			required={isRequired}
+			disabled={disabled}
+		></lightning-combobox>
+	</template>
+	<template if:true={isRadioButton}>
+		<lightning-radio-group
+			class="redux-radio none-padding"
+			validity={}
+			name={propertyName}
+			label={label}
+			variant={labelVariant}
+			value={value}
+			options={options}
+			onchange={handleChange}
+			data-el='radio'
+			data-type={eventType}
+			required={isRequired}
+			disabled={disabled}
+			type="button"
+		></lightning-radio-group>
+	</template>
+	<template if:true={isMultiCombobox}>
+		<!-- multi combo 내부 input 컴포넌트가 lightning이 아니어서 render hook 이 발생하지 않으므로 여기서 분기처리	-->
+		<template lwc:if={disabled}>
+			<c-fdr-multi-select-combobox
+				use-label
+				label={label}
+				name={propertyName}
+				options={options}
+				placeholder={placeHolder}
+				selected-options={value}
+				onchange={handleChange}
+				required={isRequired}
+				read-only={readOnly}
+				disabled={disabled}
+			></c-fdr-multi-select-combobox>
+		</template>
+		<template lwc:else>
+			<c-fdr-multi-select-combobox
+				use-label
+				label={label}
+				name={propertyName}
+				options={options}
+				placeholder={placeHolder}
+				selected-options={value}
+				onchange={handleChange}
+				required={isRequired}
+				read-only={readOnly}
+				disabled={disabled}
+			></c-fdr-multi-select-combobox>
+		</template>
+
+	</template>
+</template>
