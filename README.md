@@ -12,7 +12,7 @@ Lightning Web Component 를 위한 상태관리 라이브러리.(https://redux-t
 ### 결과
  -  RTK(Redux-ToolKit) 검토.
  -  배포를 용이하게 하게위해 Static Resource는 사용하지 않음.
- -  PS / FS / Production ORG 개발 및 배포를 통해 검증 완료.
+ -  삼성 프로젝트 PS / FS / Production ORG 개발 및 배포를 통해 검증 완료.
  -  State(Data) 디버깅 용이.
  -  단일페이지가 아닌 복잡한 구성의 Application 단위 LWC 개발용으로 적정.
 
