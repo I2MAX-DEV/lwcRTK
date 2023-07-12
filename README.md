@@ -4,17 +4,19 @@ Lightning Web Component 를 위한 상태관리 라이브러리.(https://redux-t
 
 ## 적용배경
 ### 원인
- - 복잡한 화면을 LWC 구현시 유지보수를 위해 컴포넌트를 구분하는 상황에서 LWC에서 Prop Drilling 이 너무 심해지고 수많은 이벤트가 커스텀으로 생성되고 코드가 복잡해지는 경향이 있다.
+ - 복잡한 화면을 LWC 구현시 유지보수를 위해 컴포넌트를 구분하는 상황에서 LWC에서 Prop Drilling 이 너무 심해지고,
+ - 수많은 이벤트가 커스텀으로 생성되면서 코드가 복잡해지는 경향이 있다.
  - 컴포넌트마다 Apex를 호출하는 코드가 있어서 Data가 일관적이지 않으니, 직접적으로 HTML Element 를 조작함으로 인한 오류가 너무 많았음.
  - LWC에서 Apex 메소드 호출 하는 코드를 작성할 때, UI Layer(Presentation) 와 Data Layer(Service & Container)가 구분없이 관리되는 것을 보게됨.
  - 그로 인해 UI와 Data 가 별도로 구분되는 상태관리 라이브러리가 필요헀음.
 
 ### 결과
- -  RTK(Redux-ToolKit) 검토.
- -  배포를 용이하게 하게위해 Static Resource는 사용하지 않음.
- -  삼성 프로젝트 PS / FS / Production ORG 개발 및 배포를 통해 검증 완료.
- -  State(Data) 디버깅 용이.
+ -  RTK(Redux-ToolKit) 4.5.0 버전 적용(배포를 용이하게 하게위해 Static Resource는 사용하지 않음).
+ -  State(Data) 디버깅 편해짐.
+ -  State(Data) 기반 렌더링으로 인해 HTML Element 조작하는 빈도 적어짐.
+ -  State로 상태관리를 하기 때문에, 컴포넌트 내부 변수 선언 빈도 적어짐.
  -  단일페이지가 아닌 복잡한 구성의 Application 단위 LWC 개발용으로 적정.
+ -  삼성 프로젝트 PS / FS / Production ORG에서 Small/Big 어플리케이션을 개발 및 배포. 검증 완료.
 
 ## Redux Flow
 ![ReduxAsyncDataFlowDiagram-d97ff38a0f4da0f327163170ccc13e80](https://github.com/I2MAX-DEV/lwcRTK/assets/17538535/14271444-7321-4069-a534-6a5cb82a9e0c)
