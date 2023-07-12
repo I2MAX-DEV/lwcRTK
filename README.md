@@ -24,115 +24,124 @@ Lightning Web Component 를 위한 상태관리 라이브러리.
 - redux-toolkit을 이용한 UI Layer(LWC) 와 Data Layer(Redux Store) 분리
 - state 입출력을 위한 컴포넌트 공통화
 - 각 컴포넌트에서 mapStateProps 작성 및 사용을 통한 LWC Prop Drilling(부모 -> 자식 -> 그외 Depth Props(@api Property) 전달을 위한 행위 ex) customEvent 등록 & @api 등) 해소.
-   ```javascript
-      import {api, LightningElement} from 'lwc';
-      import {Redux} from 'c/lwcRtk';
-      import {TEST_ACTIONS} from 'c/zzRtkTestAppStore';
+- LWC - APEX 통신을 Action화 함으로써 각 컴포넌트에서는 구현 해둔 Action을 호출. 그로 인한 불필요한 보일러 플레이트 코드 (ex ) apiService.gfnComApex ) 해소
 
-      export default class ZzRtkTestTodo extends Redux(LightningElement) {
-        mapStateToProps(state) {
-		    const {
-			    counter: {todos}
-		    } = state;
+### 예제설명.
+```javascript
+import {api, LightningElement} from 'lwc';
+import {Redux} from 'c/lwcRtk';
+import {TEST_ACTIONS} from 'c/zzRtkTestAppStore';
 
-		    return {
-			    todos
-		    };
-	    }
+export default class ZzRtkTestTodo extends Redux(LightningElement) {
+	// LWC Component에 Store에 있는 필요한 State를 @track에 Mapping 시킨다.(readOnly & action을 통해서만 변경가능.)
+	mapStateToProps(state) {
+		const {
+			counter: {todos}
+		} = state;
 
-	    mapDispatchToProps() {
-		    return {
-			    addTodo: TEST_ACTIONS.addTodo,
-			    deleteTodo: TEST_ACTIONS.deleteTodo,
-			    changeTodoStatus: TEST_ACTIONS.changeTodoStatus
-		    };
-	    }
-      }
-  ```
-  ```javascript
-	// store/action.js
-	import {RTK} from 'c/lwcReduxLibs';
-	import getTodosApex from '@salesforce/apex/ZZ_TodoController.getDefaultTodos';
-	import addNewTodoApex from '@salesforce/apex/ZZ_TodoController.addDefaultNewTodo';
-	import changeStatus from '@salesforce/apex/ZZ_TodoController.changeDefaultTodoStatus';
-	import deleteTodoApex from '@salesforce/apex/ZZ_TodoController.deleteTodo';
-	import {UIUtil} from "c/comApUtil";
-
-	const {createAsyncThunk} = RTK;
-
-	const getTodos = createAsyncThunk('test/getPosts', async (_, thunkAPI) => {
-    	    try {
-  		return await getTodosApex();
-            } catch (err) {
-  		return thunkAPI.rejectWithValue({error: err.body.message, status: err.status, statusText: err.statusText});
-            }
-	});
-
-	const addTodo = createAsyncThunk('test/addTodo', async (content, thunkAPI) => {
-    	    try {
-	         return await addNewTodoApex({content});
-   	    } catch (err) {
-   		 return thunkAPI.rejectWithValue({error: err.body.message, status: err.status, statusText: err.statusText});
-            }
-	});
-
-	const extraReducers = {
-    	[getTodos.pending]: (state, action) => {
-  	   state.todoLoading = true;
-    	},
-    	[getTodos.fulfilled]: (state, action) => {
-  	   state.todoLoading = true;
-           state.todos = action.payload;
-    	},
-    	[getTodos.rejected]: (state, action) => {
-  	   state.todoLoading = true;
-           state.error = action.error.message;
-           UIUtil.comShowToast(`[${action.payload.status} ${action.payload.statusText}] ${action.payload.error}`);
-    	},
-  	....
+		return {
+			todos
+		};
 	}
 
-	export {getTodos, addTodo, ...., extraReducers}
-  ```
-   ```javascript
-   	// store/reducer.js
-   	import {RTK} from 'c/lwcReduxLibs';
-	import {getTodos, addTodo, deleteTodo, changeTodoStatus, extraReducers} from "../actions/testAction";
+	// state를 변화 시키거나, 비동기호출(Apex)등을 실행시키는 Action을 @track에 Mapping 시킨다.(함수)
+	mapDispatchToProps() {
+		return {
+			addTodo: TEST_ACTIONS.addTodo,
+			deleteTodo: TEST_ACTIONS.deleteTodo,
+			changeTodoStatus: TEST_ACTIONS.changeTodoStatus
+		};
+	}
 
-	const {createSlice} = RTK;
+	/// mapStateToProps & mapDispatchToProps에서 불러온 것들은 LWC Component내에서 this.props에 Binding 된다.
+}
+```
 
-	const initialState = {
-	   todos: [],
-	   todoLoading: false,
-	   todoFilter: 'All',
-	   status: 'idle',
-	   error: null
-	};
+```javascript
+// store/actions/testAction.js
+import {RTK} from 'c/lwcReduxLibs';
+import getTodosApex from '@salesforce/apex/ZZ_TodoController.getDefaultTodos';
+import addNewTodoApex from '@salesforce/apex/ZZ_TodoController.addDefaultNewTodo';
+import changeStatus from '@salesforce/apex/ZZ_TodoController.changeDefaultTodoStatus';
+import deleteTodoApex from '@salesforce/apex/ZZ_TodoController.deleteTodo';
+import {UIUtil} from "c/comApUtil";
 
-	const counterSlice = createSlice({
-	   name: 'todo',
-	   initialState,
-	   reducers: {
+const {createAsyncThunk} = RTK;
+
+const getTodos = createAsyncThunk('test/getPosts', async (_, thunkAPI) => {
+	try {
+		return await getTodosApex();
+	} catch (err) {
+		return thunkAPI.rejectWithValue({error: err.body.message, status: err.status, statusText: err.statusText});
+	}
+});
+
+const addTodo = createAsyncThunk('test/addTodo', async (content, thunkAPI) => {
+	try {
+		return await addNewTodoApex({content});
+	} catch (err) {
+		return thunkAPI.rejectWithValue({error: err.body.message, status: err.status, statusText: err.statusText});
+	}
+});
+
+const extraReducers = {
+	[getTodos.pending]: (state, action) => {
+		state.todoLoading = true;
+	},
+	[getTodos.fulfilled]: (state, action) => {
+		state.todoLoading = true;
+		state.todos = action.payload;
+	},
+	[getTodos.rejected]: (state, action) => {
+		state.todoLoading = true;
+		state.error = action.error.message;
+		UIUtil.comShowToast(`[${action.payload.status} ${action.payload.statusText}] ${action.payload.error}`);
+	},
+	....
+}
+
+export {getTodos, addTodo, ...., extraReducers}
+```
+  
+```javascript
+// store/reducers/testReducer.js
+import {RTK} from 'c/lwcReduxLibs';
+import {getTodos, addTodo, deleteTodo, changeTodoStatus, extraReducers} from "../actions/testAction";
+
+const {createSlice} = RTK;
+
+const initialState = {
+	todos: [],
+	todoLoading: false,
+	todoFilter: 'All',
+	status: 'idle',
+	error: null
+};
+
+const todoSlice = createSlice({
+	name: 'todo',
+	initialState,
+	reducers: {
 		setTodoFilter(state, action) {
 			state.todoFilter = action.payload;
 		},
 		reset(state) {
 			Object.assign(state, initialState);
 		}
-	   },
-	   extraReducers
-	});
+	},
+	extraReducers
+});
+
+const { setTodoFilter } = counterSlice.actions;
    
-	const { setTodoFilter } = counterSlice.actions;
-   
-	export const TEST_ACTIONS = {
-	   setTodoFilter,
-	   getTodos,
-	   addTodo,
-	   deleteTodo,
-	   changeTodoStatus,
-	   reset
-	};
-	export default counterSlice.reducer;
-   ```
-- LWC - APEX 통신을 Action화 함으로써 각 컴포넌트에서는 구현 해둔 Action을 호출. 그로 인한 불필요한 보일러 플레이트 코드 (ex ) apiService.gfnComApex ) 해소 
+export const TEST_ACTIONS = {
+	setTodoFilter,
+	getTodos,
+	addTodo,
+	deleteTodo,
+	changeTodoStatus,
+	reset
+};
+export default counterSlice.reducer;
+```
+
