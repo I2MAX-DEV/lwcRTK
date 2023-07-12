@@ -1,6 +1,18 @@
 # lwcRTK
 Lightning Web Component 를 위한 상태관리 라이브러리.
 
+### 적용배경
+- 원인
+ - 복잡한 화면을 LWC 구현시 유지보수를 위해 컴포넌트를 구분하는 상황에서 LWC에서 Prop Drilling 이 너무 심해지고 수많은 이벤트가 커스텀으로 생성되고 코드가 복잡해지는 경향이 있다.
+ - 컴포넌트 별 데이터 기반으로 화면을 그려야하는데, 컴포넌트 별로 Data가 일관적인지 않으니, 직접적으로 HTML Element 를 조작함으로 인한 오류가 너무 많았음.
+ - LWC에서 Apex 메소드 호출 하는 코드를 작성할 때, UI Layer(Presentation) 와 Data Layer(Service & Container)가 구분없이 관리되는 것을 보게됨.
+ - 그로 인해 UI와 Data 가 별도로 구분되는 상태관리 라이브러리가 필요헀음.
+
+- 결과
+ -  RTK(Redux-ToolKit) 검토.
+ -  ps / fs / production 적용을 통해 검증완료.
+ -  Data 디버깅 용이.
+
 ## Development Setup
 ### 해당 library 가 담고 있는 source code 에 대한 설명
 
@@ -17,14 +29,17 @@ Lightning Web Component 를 위한 상태관리 라이브러리.
 
 ### Requirement
 - Org의 Session Settings > Lightning Web Security 옵션 활성화 필수
+- ServerSide Rendering(Aura / VF) 가 아닌 ClientSide Rendering(LWC)에서 컴포넌트와 서버 데이터 동기화를 위해 사용하므로, LWC에서만 사용가능.
 
 ### 구현목록
 - LWC - RTK state management
 - state 변화시 re-rendering
-- redux-toolkit을 이용한 UI Layer(LWC) 와 Data Layer(Redux Store) 분리
+- redux-toolkit을 이용한 `UI Layer(LWC)` 와 `Data Layer(Redux Store)` 분리
 - state 입출력을 위한 컴포넌트 공통화
-- 각 컴포넌트에서 mapStateProps 작성 및 사용을 통한 LWC Prop Drilling(부모 -> 자식 -> 그외 Depth Props(@api Property) 전달을 위한 행위 ex) customEvent 등록 & @api 등) 해소.
+- 각 컴포넌트에서 mapStateProps 작성 및 사용을 통한 **LWC Prop Drilling**(부모 -> 자식 -> 그외 Depth Props(@api Property) 전달을 위한 행위 ex) customEvent 등록 & @api 등) 해소.
 - LWC - APEX 통신을 Action화 함으로써 각 컴포넌트에서는 구현 해둔 Action을 호출. 그로 인한 불필요한 보일러 플레이트 코드 (ex ) apiService.gfnComApex ) 해소
+
+
 
 ### 예제설명.
 ```javascript
